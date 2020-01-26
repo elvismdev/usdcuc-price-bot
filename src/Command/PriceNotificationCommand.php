@@ -11,15 +11,26 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\DomCrawler\Crawler;
 use App\Util\UtilityBox;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class PriceNotificationCommand extends Command
 {
+    /**
+     * @var ParameterBagInterface
+     */
+    protected $params;
+
     protected static $defaultName = 'app:price-notification';
+
+    public function __construct(ParameterBagInterface $params) {
+        $this->params = $params;
+        parent::__construct();
+    }
 
     protected function configure()
     {
         $this
-            ->setDescription('Checks latest USD-CUC exchange Ads. Sends a notification if found a sell Ad for a set price.')
+        ->setDescription('Checks latest USD-CUC exchange Ads. Sends a notification if found a sell Ad for a set price.')
             // ->addArgument('arg1', InputArgument::OPTIONAL, 'Argument description')
             // ->addOption('option1', null, InputOption::VALUE_NONE, 'Option description')
         ;
@@ -49,4 +60,17 @@ class PriceNotificationCommand extends Command
 
         return 0;
     }
+    
+
+    /**                                 
+     * Get parameter from ParameterBag                                           
+     *                                           
+     * @param string $name                                           
+     * @return mixed                                          
+     */
+    private function getParameter($name)
+    {
+        return $this->params->get($name);
+    }
+
 }
