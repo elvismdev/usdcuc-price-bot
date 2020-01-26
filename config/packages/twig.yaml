@@ -1,0 +1,12 @@
+twig:
+    default_path: '%kernel.project_dir%/templates'
+    debug: '%kernel.debug%'
+    strict_variables: '%kernel.debug%'
+    globals:
+       platform_name: '%platform_name%'
+       search_page_url: '%search_page_url%'
+       search_text: '%search_text%'
+       min_price: '%min_price%'
+       max_price: '%max_price%'
+       gh_repo_url: '%gh_repo_url%'
+       banned_words: '%banned_words%'
