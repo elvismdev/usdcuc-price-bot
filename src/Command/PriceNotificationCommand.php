@@ -134,7 +134,7 @@ class PriceNotificationCommand extends Command
                     $adDeal->setListingId($revAdId);
                     $adDeal->setTitle($domElement->firstChild->lastChild->nodeValue);
                     $adDeal->setUrl($this->getParameter('ads_website_url') . $adUri);
-                    $adDeal->setPrice(str_replace([' cuc - ', ' usd - '], '', $domElement->firstChild->firstChild->nodeValue));
+                    $adDeal->setPrice(str_replace([' CUC - ', ' USD - '], '', $domElement->firstChild->firstChild->nodeValue));
 
                     // Tell doctrine we want to save adDeals.
                     $this->em->persist($adDeal);
