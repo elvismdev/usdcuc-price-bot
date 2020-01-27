@@ -12,6 +12,8 @@ use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\DomCrawler\Crawler;
 use App\Util\UtilityBox;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\AdDeal;
 
 class PriceNotificationCommand extends Command
 {
@@ -20,10 +22,16 @@ class PriceNotificationCommand extends Command
      */
     protected $params;
 
+    /**
+     * @var EntityManagerInterface
+     */
+    protected $em;
+
     protected static $defaultName = 'app:price-notification';
 
-    public function __construct(ParameterBagInterface $params) {
+    public function __construct(ParameterBagInterface $params, EntityManagerInterface $em) {
         $this->params = $params;
+        $this->em     = $em;
         parent::__construct();
     }
 
@@ -100,6 +108,9 @@ class PriceNotificationCommand extends Command
             })
             ;
 
+            // Get AdDeal repository.
+            $adDealRepository  = $this->em->getRepository(AdDeal::class);
+
             // Loop each Ad, stores in the DB if doesn't exists yet and sends a notification with a list of new Ads found.
             foreach ($adRowElements as $domElement) {
                 // Continue to next element if Ad price is set in CUP, or if the Ad is missing his Ad value field.
@@ -112,6 +123,9 @@ class PriceNotificationCommand extends Command
 
                 // Get the Revolico ID of the Ad from the URI.
                 $revAdId = $this->getRevAdId($adUri, '-', '.html');
+
+                // Find already saved AdDeal by his listing ID.
+                $adDeal = $adDealRepository->findOneBy(['listingId' => $revAdId]);
 
                 // $io->note(sprintf('Ad: %s', print_r($adPriceElement, true)));
             }
