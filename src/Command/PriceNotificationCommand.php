@@ -141,16 +141,16 @@ class PriceNotificationCommand extends Command
                     $saveAdDeal = true;
                 }
 
-
-                // If we have adDeals, save them.
-                if ($saveAdDeal === true) {
-                    $this->em->flush();
-                    $io->success('New adDeals were saved into the database!');
-                } else {
-                    $io->success('Seems we already have this adDeals saved into the database.');
-                }
-
                 // $io->note(sprintf('Ad: %s', print_r($adPriceElement, true)));
+            }
+
+
+            // If we have adDeals, save them.
+            if ($saveAdDeal === true) {
+                $this->em->flush();
+                $io->success('New adDeals were saved into the database!');
+            } else {
+                $io->success('Seems we already have this adDeals saved into the database.');
             }
 
             // $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
