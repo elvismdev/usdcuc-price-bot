@@ -102,8 +102,8 @@ class PriceNotificationCommand extends Command
 
             // Loop each Ad, stores in the DB if doesn't exists yet and sends a notification with a list of new Ads found.
             foreach ($adRowElements as $domElement) {
-                // Continue to next element if Ad price is set in CUP.
-                if (strpos($domElement->firstChild->firstChild->nodeValue, 'CUP') !== false) {
+                // Continue to next element if Ad price is set in CUP, or if the Ad is missing his Ad value field.
+                if (strpos($domElement->firstChild->firstChild->nodeValue, 'CUP') !== false || $domElement->firstChild->firstChild->getAttribute('data-cy') != 'adPrice') {
                     continue;
                 }
 
@@ -111,9 +111,9 @@ class PriceNotificationCommand extends Command
                 $adUri = $domElement->firstChild->getAttribute('href');
 
                 // Get the Revolico ID of the Ad from the URI.
-                $revAdId = $this->getRevAdId($adUri, '-', '.html');  
+                $revAdId = $this->getRevAdId($adUri, '-', '.html');
 
-                // $io->note(sprintf('Ad: %s', print_r($revAdId, true)));
+                // $io->note(sprintf('Ad: %s', print_r($adPriceElement, true)));
             }
 
             $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
