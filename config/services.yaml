@@ -62,3 +62,4 @@ services:
     App\EventListener\AdDealNotificationListener:
         tags:
             - { name: doctrine.event_listener, event: postPersist }
+        arguments: ['%env(SENDER_ADDRESS)%']

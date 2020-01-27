@@ -9,14 +9,17 @@ use Symfony\Component\Translation\TranslatorInterface;
 class AdDealNotificationListener
 {
 
+	private $sendEmailTo;
+
 	private $mailer;
 
 	private $translator;
 
-	public function __construct(\Swift_Mailer $mailer, TranslatorInterface $translator)
+	public function __construct($sendEmailTo, \Swift_Mailer $mailer, TranslatorInterface $translator)
 	{
 		$this->mailer       = $mailer;
 		$this->translator   = $translator;
+		$this->sendEmailTo  = $sendEmailTo;
 	}
 
 	public function postPersist(LifecycleEventArgs $args)
@@ -33,7 +36,7 @@ class AdDealNotificationListener
 
 		// Compose message.
 		$message = (new \Swift_Message(sprintf($this->translator->trans('email_messages.new_addeal_pre_subject') . ' ' . $adDeal->getTitle())))
-		->setTo(['hi@usdcuc.info'])
+		->setTo([$this->sendEmailTo])
 		->setBody($this->translator->trans(
 			'email_messages.new_addeal',
 			[
