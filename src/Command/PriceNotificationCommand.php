@@ -80,7 +80,7 @@ class PriceNotificationCommand extends Command
 
         // Check status of request.
         if (200 !== $statusCode) {
-            $io->error(sprintf('Command failed with error: %s', $statusCode));
+            $io->error(sprintf('Page request failed with error: %s', $statusCode));
         } else {
 
             // Get the HTML contents of the page requested.
@@ -133,15 +133,13 @@ class PriceNotificationCommand extends Command
                     $adDeal = new AdDeal();
                     $adDeal->setListingId($revAdId);
                     $adDeal->setTitle($domElement->firstChild->lastChild->nodeValue);
-                    $adDeal->setUrl($adUri);
+                    $adDeal->setUrl($this->getParameter('ads_website_url') . $adUri);
                     $adDeal->setPrice($domElement->firstChild->firstChild->nodeValue);
 
                     // Tell doctrine we want to save adDeals.
                     $this->em->persist($adDeal);
                     $saveAdDeal = true;
                 }
-
-                // $io->note(sprintf('Ad: %s', print_r($adPriceElement, true)));
             }
 
 
@@ -150,24 +148,10 @@ class PriceNotificationCommand extends Command
                 $this->em->flush();
                 $io->success('New adDeals were saved into the database!');
             } else {
-                $io->success('Seems we already have this adDeals saved into the database.');
+                $io->note('Seems we already have this adDeals saved into the database.');
             }
 
-            // $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
         }
-
-
-        // $arg1 = $input->getArgument('arg1');
-
-        // if ($arg1) {
-        //     $io->note(sprintf('You passed an argument: %s', $arg1));
-        // }
-
-        // if ($input->getOption('option1')) {
-        //     // ...
-        // }
-
-
 
         return 0;
     }

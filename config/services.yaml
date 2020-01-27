@@ -6,7 +6,8 @@
 parameters:
     locale: 'es'
     user_agent: 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36'
-    search_page_url: 'https://www.revolico.com/compra-venta/divisas/search.html'
+    ads_website_url: 'https://www.revolico.com'
+    search_page_url: '%ads_website_url%/compra-venta/divisas/search.html'
     search_text: 'usd'
     min_price: 0
     max_price: 1.1
