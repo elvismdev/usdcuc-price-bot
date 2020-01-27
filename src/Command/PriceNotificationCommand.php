@@ -110,6 +110,7 @@ class PriceNotificationCommand extends Command
 
             // Get AdDeal repository.
             $adDealRepository  = $this->em->getRepository(AdDeal::class);
+            $saveAdDeal        = false;
 
             // Loop each Ad, stores in the DB if doesn't exists yet and sends a notification with a list of new Ads found.
             foreach ($adRowElements as $domElement) {
@@ -127,13 +128,35 @@ class PriceNotificationCommand extends Command
                 // Find already saved AdDeal by his listing ID.
                 $adDeal = $adDealRepository->findOneBy(['listingId' => $revAdId]);
 
+                // If we don't have this adDeal, let's save it.
+                if (!$adDeal) {
+                    $adDeal = new AdDeal();
+                    $adDeal->setListingId($revAdId);
+                    $adDeal->setTitle($domElement->firstChild->lastChild->nodeValue);
+                    $adDeal->setUrl($adUri);
+                    $adDeal->setPrice($domElement->firstChild->firstChild->nodeValue);
+
+                    // Tell doctrine we want to save adDeals.
+                    $this->em->persist($adDeal);
+                    $saveAdDeal = true;
+                }
+
+
+                // If we have adDeals, save them.
+                if ($saveAdDeal === true) {
+                    $this->em->flush();
+                    $io->success('New adDeals were saved into the database!');
+                } else {
+                    $io->success('Seems we already have this adDeals saved into the database.');
+                }
+
                 // $io->note(sprintf('Ad: %s', print_r($adPriceElement, true)));
             }
 
-            $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
+            // $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
         }
 
-        
+
         // $arg1 = $input->getArgument('arg1');
 
         // if ($arg1) {
@@ -144,7 +167,7 @@ class PriceNotificationCommand extends Command
         //     // ...
         // }
 
-        
+
 
         return 0;
     }
