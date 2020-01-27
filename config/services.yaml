@@ -58,8 +58,21 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
+
     # Sends an email notification when a AdDeal is found.
     App\EventListener\AdDealNotificationListener:
         tags:
             - { name: doctrine.event_listener, event: postPersist }
         arguments: ['%env(SENDER_ADDRESS)%']
+
+
+    # Swift Mailer plugins
+    app.swiftmailer.defaults_plugin:
+        class: Finesse\SwiftMailerDefaultsPlugin\SwiftMailerDefaultsPlugin
+        tags:
+            - { name: swiftmailer.default.plugin }
+        arguments:
+            $defaults:
+                from:
+                    '%env(SENDER_ADDRESS)%': '%platform_name%'
+                replyTo: '%env(SENDER_ADDRESS)%' 
