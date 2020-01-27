@@ -107,10 +107,13 @@ class PriceNotificationCommand extends Command
                     continue;
                 }
 
-                // $io->note(sprintf('Ad: %s', print_r($domElement->firstChild->firstChild->nodeValue, true)));
-
                 // Get Ad URI.
                 $adUri = $domElement->firstChild->getAttribute('href');
+
+                // Get the Revolico ID of the Ad from the URI.
+                $revAdId = $this->getRevAdId($adUri, '-', '.html');  
+
+                // $io->note(sprintf('Ad: %s', print_r($revAdId, true)));
             }
 
             $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
@@ -130,6 +133,22 @@ class PriceNotificationCommand extends Command
         
 
         return 0;
+    }
+
+
+    /**
+     * Finds the Revolico Ad ID.
+     * @param string $string
+     * @param string $startStr
+     * @param string $endStr
+     */
+    private function getRevAdId($string,$startStr,$endStr) {
+        $startpos=strrpos($string,$startStr);
+        $endpos=strpos($string,$endStr,$startpos);
+        $endpos=$endpos-$startpos;
+        $string=substr($string,$startpos+1,$endpos-1);
+
+        return $string;
     }
 
 
