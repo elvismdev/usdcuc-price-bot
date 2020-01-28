@@ -31,9 +31,18 @@ class AdDealNotificationListener
 			return;
 		}
 
-		// Get entity manager.
-		$em = $args->getEntityManager();
 
+		// Send email notification.
+		$this->sendEmailNotification($adDeal);
+
+	}
+
+
+	/**
+	 * Send email notification.
+	 * @param AdDeal $adDeal
+	 */
+	private function sendEmailNotification($adDeal) {
 		// Compose message.
 		$message = (new \Swift_Message(sprintf($this->translator->trans('email_messages.new_addeal_pre_subject') . ' ' . $adDeal->getTitle())))
 		->setTo([$this->sendEmailTo])
@@ -48,6 +57,6 @@ class AdDealNotificationListener
 
 		// Send notification about new adDeal.
 		$this->mailer->send($message);
-
 	}
+	
 }
