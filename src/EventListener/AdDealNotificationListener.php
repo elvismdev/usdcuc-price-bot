@@ -12,18 +12,21 @@ class AdDealNotificationListener
 
 	private $sendEmailTo;
 
+	private $telegramChId;
+
 	private $mailer;
 
 	private $telegramBot;
 
 	private $translator;
 
-	public function __construct($sendEmailTo, \Swift_Mailer $mailer, TranslatorInterface $translator, Bot $telegramBot)
+	public function __construct($sendEmailTo, $telegramChId, \Swift_Mailer $mailer, TranslatorInterface $translator, Bot $telegramBot)
 	{
-		$this->mailer       = $mailer;
-		$this->translator   = $translator;
-		$this->sendEmailTo  = $sendEmailTo;
-		$this->telegramBot  = $telegramBot;
+		$this->mailer       	= $mailer;
+		$this->translator   	= $translator;
+		$this->sendEmailTo  	= $sendEmailTo;
+		$this->telegramBot 		= $telegramBot;
+		$this->telegramChId  	= $telegramChId;
 	}
 
 	public function postPersist(LifecycleEventArgs $args)
@@ -38,7 +41,6 @@ class AdDealNotificationListener
 
 		// Send email notification.
 		$this->sendEmailNotification($adDeal);
-
 
 		// Send Telegram notification.
 		$this->sendTelegramNotification($adDeal);
@@ -73,10 +75,22 @@ class AdDealNotificationListener
 	 * @param AdDeal $adDeal
 	 */
 	private function sendTelegramNotification($adDeal) {
-		
+		// Get the Telegram Bot.
 		$usdCucBot = $this->telegramBot->getBot('usdcuc_bot');
-		$usdCucBot->getMe();
+		
+		// Compose message.
+		$messageText = $this->translator->trans('email_messages.new_addeal_pre_subject') . ' ' . $adDeal->getTitle() . "\n\n";
+		$messageText .= $this->translator->trans('price') . ' $' . $adDeal->getPrice() . "\n\n";
+		$messageText .= $this->translator->trans('link') . ' ' . $adDeal->getUrl() . "\n\n";
 
+		// Set Telegram request arguments.
+		$message = [
+			'chat_id' 	=> '-100' . $this->telegramChId,
+			'text' 		=> $messageText
+		];
+
+		// Send message to Telegram channel.
+		$usdCucBot->sendMessage($message);
 	}
 
 }

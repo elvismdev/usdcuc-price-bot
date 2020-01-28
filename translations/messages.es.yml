@@ -1,3 +1,5 @@
+price: 'Precio:'
+link: 'Link:'
 email_messages:
   new_addeal_pre_subject: '[Nuevo Anuncio]'
   new_addeal: |
