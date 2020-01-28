@@ -5,13 +5,14 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: 'es'
-    user_agent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120 Safari/537.36'
-    search_page_url: 'https://www.revolico.com/compra-venta/divisas/search.html'
+    user_agent: 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36'
+    ads_website_url: 'https://www.revolico.com'
+    search_page_url: '%ads_website_url%/compra-venta/divisas/search.html'
     search_text: 'usd'
     min_price: 0
-    max_price: 2
-    platform_name: 'USDCUC.info'
-    gh_repo_url: 'https://github.com/elvismdev/usdcuc.info'
+    max_price: 1.1
+    platform_name: 'USD-CUC Price Notification'
+    gh_repo_url: 'https://github.com/elvismdev/usdcuc-price-notification'
     banned_words:
         - compro
         - conpro
@@ -50,9 +51,28 @@ services:
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
-    App\Controller\:
-        resource: '../src/Controller'
-        tags: ['controller.service_arguments']
+    # App\Controller\:
+    #     resource: '../src/Controller'
+    #     tags: ['controller.service_arguments']
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+
+    # Sends an email notification when a AdDeal is found.
+    App\EventListener\AdDealNotificationListener:
+        tags:
+            - { name: doctrine.event_listener, event: postPersist }
+        arguments: ['%env(SENDER_ADDRESS)%', '%env(TELEGRAM_BOT_API_CHANNEL_ID)%']
+
+
+    # Swift Mailer plugins
+    app.swiftmailer.defaults_plugin:
+        class: Finesse\SwiftMailerDefaultsPlugin\SwiftMailerDefaultsPlugin
+        tags:
+            - { name: swiftmailer.default.plugin }
+        arguments:
+            $defaults:
+                from:
+                    '%env(SENDER_ADDRESS)%': '%platform_name%'
+                replyTo: '%env(SENDER_ADDRESS)%' 
