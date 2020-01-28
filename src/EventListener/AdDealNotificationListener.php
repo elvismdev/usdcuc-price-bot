@@ -5,6 +5,7 @@ namespace App\EventListener;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use App\Entity\AdDeal;
 use Symfony\Component\Translation\TranslatorInterface;
+use Borsaco\TelegramBotApiBundle\Service\Bot;
 
 class AdDealNotificationListener
 {
@@ -13,13 +14,16 @@ class AdDealNotificationListener
 
 	private $mailer;
 
+	private $telegramBot;
+
 	private $translator;
 
-	public function __construct($sendEmailTo, \Swift_Mailer $mailer, TranslatorInterface $translator)
+	public function __construct($sendEmailTo, \Swift_Mailer $mailer, TranslatorInterface $translator, Bot $telegramBot)
 	{
 		$this->mailer       = $mailer;
 		$this->translator   = $translator;
 		$this->sendEmailTo  = $sendEmailTo;
+		$this->telegramBot  = $telegramBot;
 	}
 
 	public function postPersist(LifecycleEventArgs $args)
@@ -69,6 +73,9 @@ class AdDealNotificationListener
 	 * @param AdDeal $adDeal
 	 */
 	private function sendTelegramNotification($adDeal) {
+		
+		$firstBot = $this->telegramBot->getBot('usdcuc_bot');
+		$firstBot->getMe();
 		
 	}
 
