@@ -35,6 +35,10 @@ class AdDealNotificationListener
 		// Send email notification.
 		$this->sendEmailNotification($adDeal);
 
+
+		// Send Telegram notification.
+		$this->sendTelegramNotification($adDeal);
+
 	}
 
 
@@ -58,5 +62,14 @@ class AdDealNotificationListener
 		// Send notification about new adDeal.
 		$this->mailer->send($message);
 	}
-	
+
+
+	/**
+	 * Send email notification.
+	 * @param AdDeal $adDeal
+	 */
+	private function sendTelegramNotification($adDeal) {
+		
+	}
+
 }
