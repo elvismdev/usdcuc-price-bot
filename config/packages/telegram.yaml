@@ -1,0 +1,27 @@
+telegram_bot_api:
+    # Proxy (optional) :
+    #proxy: 'socks5h://127.0.0.1:5090' # this is example you have to change this
+    #async_requests: false
+
+    # Development section:
+    development:
+        # Telegram user_id of developers accounts
+        developers_id: 
+            - '%env(TELEGRAM_BOT_API_DEV_ID)%'
+        # If this mode is enabled, the robot only responds to the developers
+        maintenance:
+            enable: '%env(bool:TELEGRAM_BOT_API_MAINTENANCE)%'
+            text: "The robot is being repaired! Please come back later."
+
+    # Bots:
+    bots:
+        # The bot name
+        usdcuc_bot:
+            # Your bot token: (required)
+            token: '%env(TELEGRAM_BOT_API_TOKEN)%'
+        # second:
+        #     # Your bot token: (required)
+        #     token: 123456789:ABCD1234****4321CBA
+    
+    # The default bot returned when you call getBot()
+    default: 'usdcuc_bot'
