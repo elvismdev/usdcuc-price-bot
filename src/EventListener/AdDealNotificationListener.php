@@ -74,9 +74,9 @@ class AdDealNotificationListener
 	 */
 	private function sendTelegramNotification($adDeal) {
 		
-		$firstBot = $this->telegramBot->getBot('usdcuc_bot');
-		$firstBot->getMe();
-		
+		$usdCucBot = $this->telegramBot->getBot('usdcuc_bot');
+		$usdCucBot->getMe();
+
 	}
 
 }
