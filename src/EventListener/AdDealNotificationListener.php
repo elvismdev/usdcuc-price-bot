@@ -40,7 +40,7 @@ class AdDealNotificationListener
 
 
 		// Send email notification.
-		$this->sendEmailNotification($adDeal);
+		// $this->sendEmailNotification($adDeal);
 
 		// Send Telegram notification.
 		$this->sendTelegramNotification($adDeal);
