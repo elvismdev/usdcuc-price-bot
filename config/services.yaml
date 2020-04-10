@@ -35,6 +35,8 @@ parameters:
         - libra
         - esterlina
         - entrego
+        - remesas
+        - remesa
 
 
 services:
